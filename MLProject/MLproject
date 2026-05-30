@@ -1,0 +1,25 @@
+name: social-media-addiction-workflow
+conda_env: conda.yaml
+
+entry_points:
+  train:
+    parameters:
+      data_path:
+        type: str
+        default: Students_Social_Media_Addiction_preprocessing.csv
+      schema_path:
+        type: str
+        default: preprocessing_schema.json
+      experiment_name:
+        type: str
+        default: workflow-ci-social-media-addiction
+      model_output:
+        type: str
+        default: artifacts/social_media_addiction_model.joblib
+    command: >-
+      python modelling.py
+      --data-path {data_path}
+      --schema-path {schema_path}
+      --experiment-name {experiment_name}
+      --model-output {model_output}
+

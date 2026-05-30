@@ -1,0 +1,46 @@
+name: MLflow Training Workflow
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  train:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r Membangun_model/requirements.txt
+
+      - name: Build preprocessed dataset
+        run: |
+          python preprocessing/automate_Zacky_Muhammad_Dinata.py
+
+      - name: Run MLflow Project
+        working-directory: Workflow-CI/MLProject
+        run: |
+          mlflow run . -e train \
+            -P data_path=Students_Social_Media_Addiction_preprocessing.csv \
+            -P schema_path=preprocessing_schema.json \
+            -P experiment_name=workflow-ci-social-media-addiction \
+            -P model_output=artifacts/social_media_addiction_model.joblib \
+            --env-manager=local
+
+      - name: Upload MLflow artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: mlflow-artifacts
+          path: |
+            Workflow-CI/MLProject/mlruns
+            Workflow-CI/MLProject/artifacts
