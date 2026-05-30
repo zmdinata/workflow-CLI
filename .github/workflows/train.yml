@@ -29,12 +29,8 @@ jobs:
             "matplotlib>=3.8,<4" \
             "joblib>=1.3"
 
-      - name: Build preprocessed dataset
-        run: |
-          python preprocessing/automate_Zacky_Muhammad_Dinata.py
-
       - name: Run MLflow Project
-        working-directory: Workflow-CI/MLProject
+        working-directory: MLProject
         run: |
           mlflow run . -e train \
             -P data_path=Students_Social_Media_Addiction_preprocessing.csv \
@@ -48,5 +44,5 @@ jobs:
         with:
           name: mlflow-artifacts
           path: |
-            Workflow-CI/MLProject/mlruns
-            Workflow-CI/MLProject/artifacts
+            MLProject/mlruns
+            MLProject/artifacts
